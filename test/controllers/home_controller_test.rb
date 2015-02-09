@@ -8,6 +8,8 @@ class HomeControllerTest < ActionController::TestCase
   end
 
   test "should get home when signed in" do
+  	@user = users(:john)
+  	sign_in @user
     get             :index
     assert_response :success
   end

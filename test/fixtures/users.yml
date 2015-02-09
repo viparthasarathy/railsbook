@@ -1,0 +1,7 @@
+john:
+  id: 1
+  email: john@yahoo.com
+  encrypted_password: 123456789
+  first_name: John
+  last_name:  Smith
+ 
