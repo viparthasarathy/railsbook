@@ -1,6 +1,28 @@
 <h1> Page </h1>
 
-<%= "#{@user.first_name} #{@user.last_name}" %>
+<%= "#{@user.first_name} #{@user.last_name}" %> <br />
 
-<%= link_to "Send Friend Request" unless @user == current_user %>
+<% unless @user == current_user %>
 
+  <% if current_user.friends.include?(@user) %>
+    <%= link_to "Remove Friend", friend_request_path(:id => @user[:id]), :method => :delete %>
+
+  <% elsif current_user.requesting_friendships.include?(@user) %>
+    <%= link_to "Accept Request", friend_request_path(:id => @user[:id]), :method => :put %>
+
+  <% elsif current_user.pending_friendships.include?(@user) %>
+    <h1> Wattup.</h1>  
+
+  <% else %>
+    <%= form_for(current_user.friend_requests.build) do |f| %>
+      <%= f.hidden_field :friend_id, :value => @user[:id] %>
+      <%= f.submit "Add Friend" %>
+    <% end %>
+
+  <% end %>
+
+<% end %>
+
+<br />
+
+<%= link_to "Sign Out", destroy_user_session_path(current_user), :method => :delete %>
