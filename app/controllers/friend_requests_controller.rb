@@ -23,8 +23,7 @@ class FriendRequestsController < ApplicationController
   end
 
   def destroy
-    @friend_request = FriendRequest.where(friend_id: [current_user[:id], params[:id]]).where(user_id: [current_user[:id], params[:id]])
-    @friend_request.destroy
+    FriendRequest.destroy(params[:id])
     flash[:notice] = "Removed friend."
     redirect_to :back
   end
