@@ -5,3 +5,9 @@ john:
   first_name: John
   last_name:  Smith
  
+mike: 
+  id: 2
+  email: mike@yahoo.com
+  encrypted_password: 987654321
+  first_name: Mike
+  last_name: Fisher

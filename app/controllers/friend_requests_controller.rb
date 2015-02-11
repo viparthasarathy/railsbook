@@ -4,16 +4,16 @@ class FriendRequestsController < ApplicationController
     @friend_request = current_user.friend_requests.build(:friend_id => params[:friend_request][:friend_id], approved: false)
     if @friend_request.save 
       flash[:notice] = "Friend request sent."
-      redirect_to :back
+      redirect_to root_url
     else
       flash[:error] = "Unable to send friend request."
-      redirect_to :back
+      redirect_to root_url
     end
   end
 
   def update
-    @friend_request = FriendRequest.where(:friend_id => current_user[:id], user_id: params[:id])
-    if @friend_request.update(approved: true)
+    @friend_request = FriendRequest.find(params[:id])
+    if @friend_request.update_attributes(approved: true)
       flash[:notice] = "Friend confirmed."
       redirect_to root_url
     else
@@ -25,7 +25,7 @@ class FriendRequestsController < ApplicationController
   def destroy
     FriendRequest.destroy(params[:id])
     flash[:notice] = "Removed friend."
-    redirect_to :back
+    redirect_to root_url
   end
 
 end
