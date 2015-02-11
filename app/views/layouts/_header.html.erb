@@ -1,0 +1,15 @@
+<% if current_user.nil? %>
+  <ul> 
+  	<li> Not Signed In </li>
+  </ul>
+
+<% else %>
+
+
+  <ul> 
+	   <li>Logged in as <%= "#{current_user.first_name} #{current_user.last_name}" %></li>
+	   <li><%= link_to "Log Out", destroy_user_session_path, :method => :delete %></li>
+	   <li><%= link_to pluralize(current_user.requesting_friendships.count, 'Friend Request'), controller: "friend_requests", action: "index", id: current_user[:id] %>  </li>
+  </ul>
+
+<% end %>

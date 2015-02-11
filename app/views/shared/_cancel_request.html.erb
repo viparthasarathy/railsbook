@@ -1,0 +1,3 @@
+ <%= form_for(current_user.friend_requests.find_by(:friend_id => object[:id]), :html => { :method => :delete }) do |f| %>
+    <%= f.submit "Cancel Request" %>
+  <% end %>

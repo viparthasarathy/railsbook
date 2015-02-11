@@ -22,9 +22,9 @@ class FriendingTest < ActionDispatch::IntegrationTest
   	assert_select 'form' do
   	  assert_select "[value=?]", "Cancel Request"
   	end
-  	request = @user.friend_requests.find_by(friend_id: @alt_user.id)
+  	friend_request = @user.friend_requests.find_by(friend_id: @alt_user.id)
   	assert_difference 'FriendRequest.count', -1 do
-  	  delete friend_request_path(request)
+  	  delete friend_request_path(friend_request), {}, { 'HTTP_REFERER' => 'http://localhost:3000/users/2' }
   	end
   end
 
@@ -35,20 +35,17 @@ class FriendingTest < ActionDispatch::IntegrationTest
     assert_select 'form' do
       assert_select "[value=?]", "Accept Request"
     end
-    request = @user.friend_requests.find_by(friend_id: @alt_user.id)
+    friend_request = @user.friend_requests.find_by(friend_id: @alt_user.id)
     assert_difference '@alt_user.reload.friends.count', 1 do
-      put friend_request_path(request), friend_request: {user_id: 1, friend_id: 2, approved: true }
+      put friend_request_path(friend_request), { friend_request: {user_id: 1, friend_id: 2, approved: true } }, { 'HTTP_REFERER' => 'http://localhost:3000/users/1' }
     end
-    assert_redirected_to root_url
-    follow_redirect!
     get user_path(@user)
     assert_select 'form' do
       assert_select "[value=?]", "Remove Friend"
     end
     assert_difference '@alt_user.reload.friends.count', -1 do
-      delete friend_request_path(request)
+      delete friend_request_path(friend_request), {}, { 'HTTP_REFERER' => 'http://localhost:3000/users/1' }
     end
-    assert_redirected_to root_url
   end
 
   test "alt user should be able to decline friend requests" do
@@ -58,25 +55,23 @@ class FriendingTest < ActionDispatch::IntegrationTest
   	assert_select 'form' do
   	  assert_select "[value=?]", "Decline Request"
   	end
-  	request = @user.friend_requests.find_by(friend_id: @alt_user.id)
+  	friend_request = @user.friend_requests.find_by(friend_id: @alt_user.id)
   	assert_no_difference '@alt_user.reload.friends.count' do
-  	  delete friend_request_path(request)
+  	  delete friend_request_path(friend_request), {}, { 'HTTP_REFERER' => 'http://localhost:3000/users/1' }
   	end
-  	assert_redirected_to root_url
   end
 
   test "user should be able to remove friendship" do
-    request = FriendRequest.new(user_id: @user.id, friend_id: @alt_user.id, approved: true)
-    request.save
+    friend_request = FriendRequest.new(user_id: @user.id, friend_id: @alt_user.id, approved: true)
+    friend_request.save
     login_as(@user)
     get user_path(@alt_user)
     assert_select 'form' do
       assert_select "[value=?]", "Remove Friend"
     end
     assert_difference '@user.reload.friends.count', -1 do
-    	delete friend_request_path(request)
+    	delete friend_request_path(friend_request), {}, { 'HTTP_REFERER' => 'http://localhost:3000/users/2' }
     end
-    assert_redirected_to root_url
   end
 
   private
@@ -89,7 +84,7 @@ class FriendingTest < ActionDispatch::IntegrationTest
   	  assert_select "[value=?]", "Add Friend"
   	end
     assert_difference 'FriendRequest.count', 1 do
-  	  post friend_requests_path, friend_request: {user_id: 1, friend_id: 2, approved: false }
+  	  post friend_requests_path, { friend_request: {user_id: 1, friend_id: 2, approved: false } }, { 'HTTP_REFERER' => 'http://localhost:3000/users/2' }
   	end
   	logout	
   end

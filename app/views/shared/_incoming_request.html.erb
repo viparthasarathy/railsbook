@@ -1,0 +1,6 @@
+  <%= form_for(object.friend_requests.find_by(:friend_id => current_user[:id]), :html => { :method => :put }) do |f| %> 
+    <%= f.submit "Accept Request" %>
+  <% end %>
+  <%= form_for(object.friend_requests.find_by(:friend_id => current_user[:id]), :html => { :method => :delete }) do |f| %>
+    <%= f.submit "Decline Request" %>
+  <% end %>

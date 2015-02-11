@@ -1,0 +1,26 @@
+<h1> Friend Requests </h1>
+
+<h2> Incoming Requests </h2>
+
+<% if @incoming_requests.empty? %>
+  <p> None </p>
+
+<% else %>
+  <% @incoming_requests.each do |user| %>
+    <%= link_to "#{user.first_name} #{user.last_name}", controller: "users", action: "show", id: user[:id] %>
+    <%= render 'shared/incoming_request', object: user %>
+  <% end %>
+
+<% end %>
+
+<h2> Outgoing Requests </h2>
+<% if @outgoing_requests.empty? %>
+  <p> None </p>
+
+<% else %>
+  <% @outgoing_requests.each do |user| %>
+    <%= link_to "#{user.first_name} #{user.last_name}", controller: "users", action: "show", id: user[:id] %>
+    <%= render 'shared/cancel_request', object: user %>
+  <% end %>
+
+<% end %>
