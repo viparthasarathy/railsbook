@@ -4,6 +4,8 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable         
   validates :first_name, :last_name, presence: true
+  
+  has_many :posts
 
   has_many :friend_requests
   has_many :incoming_friend_requests, :class_name => "FriendRequest", :foreign_key => "friend_id"

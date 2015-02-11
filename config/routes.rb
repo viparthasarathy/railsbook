@@ -5,5 +5,5 @@ Rails.application.routes.draw do
   get  'home/index' => 'home#index'
   root 'home#index'
   resources :users, :only => [:show]
-  resources :friend_requests
+  resources :friend_requests, :posts
 end
