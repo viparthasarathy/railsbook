@@ -1,1 +1,14 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+most_recent:
+  content: "This is the most recent post."
+  created_at: <%= Time.zone.now %>
+
+
+middle:
+  content: "This is the middle post."
+  created_at: <%= 5.hours.ago %>
+
+oldest:
+  content: "This is the oldest post."
+  created_at: <%= 10.hours.ago %>

@@ -27,5 +27,13 @@ class PostTest < ActiveSupport::TestCase
     @post.creator_id = nil
     assert_not @post.valid?
   end
+
+  test "most recent post should be first" do
+    assert_equal Post.first, posts(:most_recent)
+  end
+
+  test "oldest post should be last" do
+    assert_equal Post.last, posts(:oldest)
+  end
   
 end
