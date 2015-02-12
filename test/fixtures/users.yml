@@ -11,3 +11,10 @@ mike:
   encrypted_password: 987654321
   first_name: Mike
   last_name: Fisher
+
+bob:
+  id: 3
+  email: bob@yahoo.com
+  encrypted_password: 55555555
+  first_name: Bob 
+  last_name: Williams
