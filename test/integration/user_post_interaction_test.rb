@@ -21,13 +21,17 @@ class UserPostInteractionTest < ActionDispatch::IntegrationTest
     get user_path(@user)
     assert_select 'p', text: "Lorem ipsum."
     @post = @user.posts.last 
-    assert_select 'a', text: 'edit'
+    assert_select 'a', text: "Edit"
+    get edit_post_path(@post)
+    assert_select 'form' do
+    	assert_select "[value=?]", "Edit Post"
+    end
     put post_path(@post), { post: {content: "Test." } }, { 'HTTP_REFERER' => 'http://localhost:3000/users/1' }
     get user_path(@user)
     assert_select 'p', text: "Test." 
-    assert_select 'a', text: 'delete'
+    assert_select 'a', text: "Delete"
     assert_difference ['Post.count', '@user.reload.posts.count'], -1 do
-    	delete post_path(@post)
+    	delete post_path(@post), {}, { 'HTTP_REFERER' => 'http://localhost:3000/users/1' }
     end
   end
 
