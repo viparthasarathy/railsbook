@@ -1,0 +1,9 @@
+<h2> Friends List </h2>
+
+<% if @user.friends.empty? %>
+  <p>No Friends</p>
+<% else %>
+  <% @user.friends.each do |friend| %>
+    <p><%= link_to "#{friend.first_name} #{friend.last_name}", controller: "users", action: "show", id: friend[:id] %></p>
+  <% end %>
+<% end %>

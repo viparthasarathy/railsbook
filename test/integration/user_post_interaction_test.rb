@@ -8,16 +8,29 @@ class UserPostInteractionTest < ActionDispatch::IntegrationTest
   	@user = users(:john)
   end
 
-  test "user should be able to create posts" do
+  test "user should be able to create, update, and destroy posts" do
   	login_as(@user)
   	get user_path(@user)
   	assert_select 'form' do 
-  		assert_select ["value=?"], "Post"
+  		assert_select "[value=?]", "Post"
   	end
+  	assert_select 'p', text: "No Posts" 
     assert_difference ['Post.count', '@user.reload.posts.count'] do
-    	post posts_path, { post: {user_id: @user[:id], content: "Lorem ipsum blahblahblah." } }, { 'HTTP_REFERER' => 'http://localhost:3000/users/1'}
+    	post posts_path, { post: {user_id: @user[:id], content: "Lorem ipsum." } }, { 'HTTP_REFERER' => 'http://localhost:3000/users/1' }
     end
-
-
+    get user_path(@user)
+    assert_select 'p', text: "Lorem ipsum."
+    @post = @user.posts.last 
+    assert_select 'a', text: 'edit'
+    put post_path(@post), { post: {content: "Test." } }, { 'HTTP_REFERER' => 'http://localhost:3000/users/1' }
+    get user_path(@user)
+    assert_select 'p', text: "Test." 
+    assert_select 'a', text: 'delete'
+    assert_difference ['Post.count', '@user.reload.posts.count'], -1 do
+    	delete post_path(@post)
+    end
   end
+
+
+
 end

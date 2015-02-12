@@ -8,14 +8,15 @@
 
 <% end %>
 
+<% if @user == current_user %>
+
+  <%= render 'shared/post_form' %>
+
+<% end %>
+
 <br />
 
-<h2> Friends List </h2>
+<%= render 'users/friends_list' %>
 
-<% if @user.friends.empty? %>
-  <p>No Friends</p>
-<% else %>
-  <% @user.friends.each do |friend| %>
-    <p><%= link_to "#{friend.first_name} #{friend.last_name}", controller: "users", action: "show", id: friend[:id] %></p>
-  <% end %>
-<% end %>
+
+<%= render 'users/posts' %>

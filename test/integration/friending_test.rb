@@ -12,7 +12,7 @@ class FriendingTest < ActionDispatch::IntegrationTest
     login_as(@user)
     get user_path(@user)
     assert_template 'users/show'
-    assert_select 'form', count: 0
+    assert_select 'form', count: 1
   end
 
   test "user should be able to create and cancel friend requests" do
