@@ -3,7 +3,7 @@ Rails.application.routes.draw do
   devise_for :users, :controllers => { registrations: 'registrations' }
   get  'home/index' => 'home#index'
   root 'home#index'
-  resources :users, :only => [:show]
+  resources :users, :only => [:show, :index]
   resources :friend_requests, :posts
-  resources :likes, :only => [:create, :destroy]
+  resources :likes, :comments, :only => [:create, :destroy]
 end

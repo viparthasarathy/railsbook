@@ -7,7 +7,7 @@
 
 <% else %>
   <% @incoming_requests.each do |user| %>
-    <%= link_to "#{user.first_name} #{user.last_name}", controller: "users", action: "show", id: user[:id] %>
+    <%= link_to "#{user.first_name} #{user.last_name}", user %>
     <%= render 'shared/incoming_request', object: user %>
   <% end %>
 
@@ -19,7 +19,7 @@
 
 <% else %>
   <% @outgoing_requests.each do |user| %>
-    <%= link_to "#{user.first_name} #{user.last_name}", controller: "users", action: "show", id: user[:id] %>
+    <%= link_to "#{user.first_name} #{user.last_name}", user %>
     <%= render 'shared/cancel_request', object: user %>
   <% end %>
 

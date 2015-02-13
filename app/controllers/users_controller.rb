@@ -5,4 +5,8 @@ class UsersController < ApplicationController
   	@post = @user.posts.build
   	@posts = @user.posts.all
   end
+
+  def index
+  	@users = User.all
+  end
 end

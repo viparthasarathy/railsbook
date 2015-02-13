@@ -7,6 +7,7 @@ class User < ActiveRecord::Base
 
   has_many :posts
   has_many :created_posts, :class_name => "Post", :foreign_key => "creator_id"
+  has_many :comments
 
   has_many :friend_requests
   has_many :incoming_friend_requests, :class_name => "FriendRequest", :foreign_key => "friend_id"

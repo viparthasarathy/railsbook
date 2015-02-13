@@ -4,6 +4,7 @@ class Post < ActiveRecord::Base
 	belongs_to :creator,    :class_name => "User"
 	
 	has_many   :likes,      as: :likeable
+	has_many   :comments
 
 	default_scope -> { order(created_at: :desc) }
 	

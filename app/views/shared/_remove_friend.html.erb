@@ -1,10 +1,10 @@
-  <% if current_user.initiated_friendships.include?(@user) %>
-    <%= form_for(current_user.friend_requests.find_by(:friend_id => @user[:id]), :html => { :method => :delete }) do |f| %>
+  <% if current_user.initiated_friendships.include?(object) %>
+    <%= form_for(current_user.friend_requests.find_by(:friend_id => object[:id]), :html => { :method => :delete }) do |f| %>
       <%= f.submit "Remove Friend" %>
     <% end %>
 
   <% else %>
-    <%= form_for(@user.friend_requests.find_by(:friend_id => current_user[:id]), :html => { :method => :delete }) do |f| %>
+    <%= form_for(object.friend_requests.find_by(:friend_id => current_user[:id]), :html => { :method => :delete }) do |f| %>
       <%= f.submit "Remove Friend" %>
     <% end %>
   <% end %>
