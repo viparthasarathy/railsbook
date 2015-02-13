@@ -16,7 +16,9 @@ class User < ActiveRecord::Base
 
   has_many :pending_friendships,    ->  { where(friend_requests: { approved: false }) }, :through => :friend_requests,          :source => :friend
   has_many :requesting_friendships, ->  { where(friend_requests: { approved: false }) }, :through => :incoming_friend_requests, :source => :user 
-
+  
+  has_many :likes
+  
   def friends
   	initiated_friendships | passive_friendships
   end

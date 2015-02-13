@@ -1,3 +1,4 @@
+<h2> Wall </h2>
 <% if @posts.empty? %>
  <p> No Posts </p>
 
@@ -6,12 +7,15 @@
 	  <p><%= post.content %> </p>
 	  <p><%= "#{post.creator.first_name} #{post.creator.last_name}"%>  <%="> #{post.user.first_name} #{post.user.last_name}" unless post.creator == post.user %> </p>
 	  <p><%= time_ago_in_words(post.created_at) %></p>
-    <% if post.creator_id == current_user.id %>
-	    <%= link_to "Edit", edit_post_path(post) %>
-	  <% end %>
-	  <% if post.creator_id == current_user.id || post.user_id == current_user.id %>
-	    <%= link_to "Delete", post_path(post), method: :delete, data: { confirm: "Are you sure?" } %>
-	  <% end %>
+	  <p><%= pluralize(post.likes.count, 'Like') %></p>
+    <%= link_to "Edit", edit_post_path(post) if post.creator_id == current_user.id %>	  
+	  <%= link_to "Delete", post_path(post), method: :delete, data: { confirm: "Are you sure?" } if (post.creator_id == current_user.id || post.user_id == current_user.id)  %>
+
+	  <% if post.likes.pluck(:user_id).include?(current_user.id) %>
+	    <%= link_to "Unlike", like_path(:post_id => post.id), method: :delete %>
+    <% else %>
+      <%= link_to "Like", likes_path(:post_id => post.id), method: :post %>
+    <% end %>
 	  <br />
 
 	<% end %>

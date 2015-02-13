@@ -97,6 +97,41 @@ class UserPostInteractionTest < ActionDispatch::IntegrationTest
   	assert_redirected_to root_url
   end
 
+  test "users should be able to like posts" do
+    post_on_wall
+    login_as(@third)
+    get user_path(@alt_user)
+    @post = @alt_user.posts.last
+    assert_select 'a', text: "Like"
+    assert_difference ['Like.count', '@post.reload.likes.count', '@third.reload.likes.count'] do
+      post likes_path(post_id: @post[:id]), { likes: {likeable: @post, user: @third } }, {'HTTP_REFERER' => 'http://localhost:3000/users/2' } 
+    end
+    get user_path(@alt_user)
+    @like = @third.likes.last
+    assert_select 'a', text: "Unlike"
+    assert_select 'p', text: "1 Like"
+    assert_difference ['Like.count', '@post.reload.likes.count', '@third.reload.likes.count'], -1 do
+      delete like_path(post_id: @post[:id]), {}, { 'HTTP_REFERER' => 'http://localhost:3000/users/2' }
+    end
+    get user_path(@alt_user)
+    assert_select 'a', text: "Like"
+    assert_select 'p', text: "0 Likes"
+  end
+
+  test "multiple users should be able to like posts" do
+    post_on_wall
+    login_as(@user)
+    get user_path(@alt_user)
+    @post = @alt_user.posts.last
+    post likes_path(post_id: @post[:id]), { likes: {likeable: @post, user: @third } }, {'HTTP_REFERER' => 'http://localhost:3000/users/2' }
+    logout
+    login_as(@alt_user)
+    get user_path(@alt_user)
+    post likes_path(post_id: @post[:id]), { likes: {likeable: @post, user: @third } }, {'HTTP_REFERER' => 'http://localhost:3000/users/2' }
+    get user_path(@alt_user)
+    assert_select 'p', text: "2 Likes"
+  end
+
   private
 
   def delete_with_permissions
@@ -128,7 +163,7 @@ class UserPostInteractionTest < ActionDispatch::IntegrationTest
   		assert_select '[value=?]', "Post"
   	end
   	assert_difference ['@user.reload.created_posts.count', '@alt_user.reload.posts.count'] do
-  		post posts_path, { post: { user_id: @alt_user[:id], creator_id: @user[:id], content: "Lorem ipsum." } }, { 'HTTP_REFERER' => 'http://localhost:3000/users/2' }
+  		post posts_path, { post: { user_id: @alt_user[:id], creator_id: @user[:id], content: "Lorem ipsum."} }, { 'HTTP_REFERER' => 'http://localhost:3000/users/2' }
   	end
   	get user_path(@alt_user)
   	assert_select 'p', text: "Lorem ipsum."
