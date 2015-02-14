@@ -11,7 +11,7 @@ class SignUpTest < ActionDispatch::IntegrationTest
   	                                                   password:              "password",
   	                                                   password_confirmation: "password"}
   	end
-  	assert_template 'home/index'
+  	assert_template 'posts/index'
   end
 
   test "invalid signup information" do

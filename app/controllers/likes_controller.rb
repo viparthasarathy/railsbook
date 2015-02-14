@@ -13,8 +13,7 @@ class LikesController < ApplicationController
 
 
   def destroy
-  	@post = Post.find(params[:post_id])
-  	@like = @post.likes.where(user: current_user).last
+  	@like = Like.find(params[:id])
   	@like.destroy
   	redirect_to :back
   end

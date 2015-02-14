@@ -11,7 +11,7 @@ class HomeControllerTest < ActionController::TestCase
   	@user = users(:john)
   	sign_in @user
     get             :index
-    assert_response :success
+    assert_redirected_to posts_path
   end
 
 end

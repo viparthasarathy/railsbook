@@ -1,8 +1,10 @@
-<%= form_for @post do |f| %>
-  
-  <%= f.text_area :content, placeholder: "Create a new post..." %>
-  <%= f.hidden_field :creator_id, value: current_user.id %>
-  <%= f.hidden_field :user_id,    value: @user.id %>
-  <%= f.submit "Post" %> 
 
+<% if object.friends.include?(current_user) || object == current_user %>
+	<%= form_for @post do |f| %>
+	  
+	  <%= f.text_area :content, placeholder: "Create a new post..." %>
+	  <%= f.hidden_field :user_id,    value: object.id %>
+	  <%= f.submit "Post" %> 
+
+	<% end %>
 <% end %>

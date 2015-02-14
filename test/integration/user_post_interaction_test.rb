@@ -18,7 +18,7 @@ class UserPostInteractionTest < ActionDispatch::IntegrationTest
   	end
   	assert_select 'p', text: "No Posts" 
     assert_difference ['Post.count', '@user.reload.posts.count'] do
-    	post posts_path, { post: {user_id: @user[:id], creator_id: @user[:id], content: "Lorem ipsum." } }, { 'HTTP_REFERER' => 'http://localhost:3000/users/1' }
+    	post posts_path, { post: {user_id: @user[:id], content: "Lorem ipsum." } }, { 'HTTP_REFERER' => 'http://localhost:3000/users/1' }
     end
     get user_path(@user)
     assert_select 'p', text: "Lorem ipsum."
@@ -111,7 +111,7 @@ class UserPostInteractionTest < ActionDispatch::IntegrationTest
     assert_select 'a', text: "Unlike"
     assert_select 'p', text: "1 Like"
     assert_difference ['Like.count', '@post.reload.likes.count', '@third.reload.likes.count'], -1 do
-      delete like_path(post_id: @post[:id]), {}, { 'HTTP_REFERER' => 'http://localhost:3000/users/2' }
+      delete like_path(@like), {}, { 'HTTP_REFERER' => 'http://localhost:3000/users/2' }
     end
     get user_path(@alt_user)
     assert_select 'a', text: "Like"
@@ -157,13 +157,14 @@ class UserPostInteractionTest < ActionDispatch::IntegrationTest
   end
 
   def post_on_wall
+    FriendRequest.create(user: @user, friend: @alt_user, approved: true)
   	login_as(@user)
   	get user_path(@alt_user)
   	assert_select 'form' do
   		assert_select '[value=?]', "Post"
   	end
   	assert_difference ['@user.reload.created_posts.count', '@alt_user.reload.posts.count'] do
-  		post posts_path, { post: { user_id: @alt_user[:id], creator_id: @user[:id], content: "Lorem ipsum."} }, { 'HTTP_REFERER' => 'http://localhost:3000/users/2' }
+  		post posts_path, { post: { user_id: @alt_user[:id], content: "Lorem ipsum."} }, { 'HTTP_REFERER' => 'http://localhost:3000/users/2' }
   	end
   	get user_path(@alt_user)
   	assert_select 'p', text: "Lorem ipsum."

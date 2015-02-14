@@ -1,0 +1,9 @@
+<h4> Comments </h4>
+<%  object.each do |comment| %>
+  <% if comment %> 
+	  <p><%= comment.content %></p>
+	  <p><%= "#{comment.user.first_name} #{comment.user.last_name}" %></p>
+	    <%= link_to "Delete", comment_path(comment), method: :delete, data: { confirm: "Are you sure?" } if (comment.user == current_user || comment.post.user == current_user) %>
+	    <%= link_to "Edit", edit_comment_path(comment) if comment.user == current_user %>
+	<% end %>
+<% end %>

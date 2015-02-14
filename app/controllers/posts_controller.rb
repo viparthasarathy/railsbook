@@ -2,38 +2,43 @@ class PostsController < ApplicationController
   
 	def create
 		@user = User.find(post_params[:user_id])
-		@post = @user.posts.build(post_params)
-		if @post.save
-			flash[:success] = "Your post has been created."
-			redirect_to :back
+	  if current_user.friends.include?(@user) || @user == current_user
+	  	@post = @user.posts.build(content: post_params[:content], creator: current_user)
+		  if @post.save
+			  flash[:success] = "Your post has been created."
+			  redirect_to :back
+		  else
+			  flash[:error] = "Error with post creation."
+			  redirect_to :back
+		  end
 		else
-			flash[:error] = "Error with post creation."
+			flash[:error] = "You are not friends with this user."
 			redirect_to :back
-		end
+	  end
 	end
 
 	def show
 		@post = Post.find(params[:id])
+		@comments = @post.comments.all
+		@comment = @post.comments.build
 	end
 
   def edit
   	@post = Post.find(params[:id])
-  	flash[:error] = "You do not have permission to edit this post."
   	redirect_to root_url unless @post.creator == current_user
   end
 
 	def update
 		@post = Post.find(params[:id])
-		if @post.creator == current_user
-		  if @post.update_attributes(post_params)
+		if @post.creator == current_user 
+		  if @post.update_attributes(content: post_params[:content])
 			  flash[:success] = "Post successfully edited."
-			  redirect_to :back
+			  redirect_to current_user
 		  else
 			  flash[:error] = "Post was not updated."
-			  render 'new'
+			  render 'edit'
 			end
 	  else
-	  	flash[:error] = "You do not have permission to edit this post."
 	  	redirect_to root_url
 		end
 	end
@@ -45,16 +50,21 @@ class PostsController < ApplicationController
 	    flash[:success] = "Post deleted."
 	    redirect_to :back
 	  else
-	  	flash[:error] = "You do not have permission to delete this post."
 	  	redirect_to root_url
 	  end
+	end
+
+	def index
+		ids = current_user.friends.map{ |friend| friend.id } << current_user.id
+    @posts = Post.where(user_id: ids)
+		@post = current_user.posts.build
 	end
 
 	private
 
 
 	def post_params
-		params.require(:post).permit(:user_id, :creator_id, :content)
+		params.require(:post).permit(:user_id, :content)
 	end
 
 end

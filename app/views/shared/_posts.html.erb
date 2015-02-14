@@ -1,9 +1,10 @@
-<h2> Wall </h2>
+
 <% if @posts.empty? %>
  <p> No Posts </p>
 
 <% else %>
 	<% @posts.each do |post| %>
+	  <h4> Post </h4>
 	  <p><%= post.content %> </p>
 	  <p><%= "#{post.creator.first_name} #{post.creator.last_name}"%>  <%="> #{post.user.first_name} #{post.user.last_name}" unless post.creator == post.user %> </p>
 	  <p><%= time_ago_in_words(post.created_at) %></p>
@@ -12,10 +13,16 @@
 	  <%= link_to "Delete", post_path(post), method: :delete, data: { confirm: "Are you sure?" } if (post.creator_id == current_user.id || post.user_id == current_user.id)  %>
 
 	  <% if post.likes.pluck(:user_id).include?(current_user.id) %>
-	    <%= link_to "Unlike", like_path(:post_id => post.id), method: :delete %>
+	    <%= link_to "Unlike", like_path(post.likes.where(user: current_user).last), method: :delete %>
     <% else %>
       <%= link_to "Like", likes_path(:post_id => post.id), method: :post %>
     <% end %>
+    
+    <% @comments = [post.comments.first, post.comments.second, post.comments.third] %>
+    <%= render 'shared/comments', object: @comments %>
+    
+    <%= link_to "Comment", post_path(post) %>
+    <%= link_to "See All Comments", post_path(post) %>
 	  <br />
 
 	<% end %>

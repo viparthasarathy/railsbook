@@ -15,18 +15,23 @@
 
   <% else %>
     <%= render 'shared/add_friend', object: @user %>
-    
-<% end %>
 
 <% end %>
 
+<% end %>
 
-<%= render 'shared/post_form' %>
+<br />
 
-
+<%= render 'shared/post_form', object: @user  %>
 <br />
 
 <%= render 'users/friends_list' %>
 
 
-<%= render 'users/posts' %>
+
+<h2> Wall </h2> 
+
+<%= render 'shared/posts'%>
+
+
+
