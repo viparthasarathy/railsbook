@@ -3,6 +3,7 @@
 <p><%= "#{@post.creator.first_name} #{@post.creator.last_name}"%>  <%="> #{@post.user.first_name} #{@post.user.last_name}" unless @post.creator == @post.user %> </p>
 <p><%= time_ago_in_words(@post.created_at) %></p>
 <p><%= pluralize(@post.likes.count, 'Like') %></p>
+<p><%= pluralize(@post.comments.count, 'Comment') %></p>
 <%= link_to "Edit", edit_post_path(@post) if @post.creator_id == current_user.id %>	  
 <%= link_to "Delete", post_path(@post), method: :delete, data: { confirm: "Are you sure?" } if (@post.creator_id == current_user.id || @post.user_id == current_user.id)  %>
 

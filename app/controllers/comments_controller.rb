@@ -2,7 +2,7 @@ class CommentsController < ApplicationController
 
   def create
   	@post = Post.find(comment_params[:post_id])
-    if current_user.friends.include?(@post.user)
+    if current_user.friends.include?(@post.user) || current_user == @post.user
       @comment = @post.comments.build(content: comment_params[:content], user: current_user)
       if @comment.save
       	flash[:success] = "Commented."
