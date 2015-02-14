@@ -59,7 +59,7 @@ class CommentsControllerTest < ActionController::TestCase
 	test "only comment creator should be able to edit" do
 		sign_in @alt_user
 		@alt_user.friend_requests.create!(friend: @user, approved: true)
-		post :create, comment: { content: "Lorem ipsum", post_id: @post }
+		post :create, comment: { content: "Lorem ipsum", post_id: @post[:id] }
 		@comment = @alt_user.comments.last
 		patch :update, id: @comment, comment: { content: "Edited." }
 		assert @comment.reload.content == "Edited."
